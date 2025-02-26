@@ -1,0 +1,35 @@
+from PIL import Image, ImageEnhance, ImageFilter
+
+def fotograf_duzenle(dosya_yolu, parlaklik=1.0, kontrast=1.0, keskinlik=1.0, bulaniklik=0):
+    try:
+        resim = Image.open(dosya_yolu)
+
+        # Parlaklık ayarı
+        parlaklik_ayarlayici = ImageEnhance.Brightness(resim)
+        resim = parlaklik_ayarlayici.enhance(parlaklik)
+
+        # Kontrast ayarı
+        kontrast_ayarlayici = ImageEnhance.Contrast(resim)
+        resim = kontrast_ayarlayici.enhance(kontrast)
+
+        # Keskinlik ayarı
+        keskinlik_ayarlayici = ImageEnhance.Sharpness(resim)
+        resim = keskinlik_ayarlayici.enhance(keskinlik)
+
+        # Bulanıklık ayarı
+        if bulaniklik > 0:
+            resim = resim.filter(ImageFilter.GaussianBlur(radius=bulaniklik))
+
+        # Kaydet
+        yeni_dosya_yolu = dosya_yolu.replace(".", "_duzenlenmis.")
+        resim.save(yeni_dosya_yolu)
+        print(f"Düzenlenen resim kaydedildi: {yeni_dosya_yolu}")
+
+    except FileNotFoundError:
+        print("Dosya bulunamadı.")
+    except Exception as e:
+        print(f"Hata oluştu: {e}")
+
+# Kullanım örneği
+dosya_yolu = "ornek_resim.jpg"  # Düzenlemek istediğiniz resmin dosya yolunu buraya girin.
+fotograf_duzenle(dosya_yolu, parlaklik=1.2, kontrast=1.1, keskinlik=1.5, bulaniklik=2)
